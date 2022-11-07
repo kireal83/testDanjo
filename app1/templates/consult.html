@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>缴费日期查询</title>
+    <style>
+        h1 {
+            padding: 10px;
+            font-family: Verdana, serif;
+            font-size: 50px;
+            text-align: center;
+        }
+
+        div.ex1 {
+            padding: 10px;
+            font-size: 24px;
+            font-family: Verdana, serif;
+            text-align: center;
+        }
+
+        div.ex2 {
+            padding: 10px;
+            font-size: 24px;
+            font-family: Verdana, serif;
+            text-align: center;
+        }
+
+        label {
+            padding: 10px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        input[type=text] {
+            padding: 10px;
+            margin: 2px 0;
+            box-sizing: border-box;
+            border: 1px solid #555;
+            outline: none;
+            font-size: 20px;
+        }
+
+        input[type=text]:focus {
+            background-color: lightblue;
+        }
+
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+        }
+
+        table.dataintable {
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: #0164D5;
+            text-align: center;
+            width: 100%;
+        }
+
+        table.dataintable th {
+            padding: 5px 10px;
+            font-size: 24px;
+            font-family: Verdana, serif;
+            color: #fff;
+        }
+
+        table.dataintable td {
+            padding: 5px 10px;
+            font-size: 20px;
+            font-family: Verdana, serif;
+            color: #290D75;
+        }
+
+        table.dataintable tr:nth-child(odd) {
+            background-color: #92BCEC;
+        }
+
+        table.dataintable tr:nth-child(even) {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+<h1>缴费日期查询</h1>
+<form method="post">
+    <!-安全机制，没有会报403错误 ->
+    {% csrf_token %}
+    <div class="ex1">
+        <div class="ex2">查询条件,只输入一项即可。</div>
+        <div class="ex2">
+            <label>
+                保险手册号：<input type="text" name="bxhm">
+            </label>
+            <label>
+                姓名：<input type="text" name="xm">
+            </label>
+            <label>
+                身份证号码：<input type="text" name="sfhm">
+            </label>
+            <button type="submit">开始查询</button>
+        </div>
+    </div>
+</form>
+<div>
+    筛选（单选）：<br>
+    <div>
+        <label>
+            保险手册号：
+            {% for item_xzbxhm in xzbxhm %}
+                <input type="radio" name="sx_bxhm">{{ item_xzbxhm }}
+            {% endfor %}
+        </label>
+    </div>
+    <div>
+        <label>
+            身份证号码：
+            {% for item_old_xzsfhm in xzsfhm %}
+                <input type="radio" name="sx_bxhm">{{ item_old_xzsfhm }}
+            {% endfor %}
+        </label>
+    </div>
+
+</div>
+<div>
+    <table class="dataintable">
+        <tr>
+            <th>姓名</th>
+            <th>保险手册号</th>
+            <th>身份证号码</th>
+            <th>缴费年度</th>
+            <th>缴费月份</th>
+            <th>缴费日期</th>
+            <th>入库时间</th>
+        </tr>
+
+        {% for item in dtsj_old_sxjg %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.bxhm }}</td>
+                <td>-</td>
+                <td>{{ item.qsrq.year }}</td>
+                <td>{{ item.qsrq.month }}-{{ item.zzrq.month }}</td>
+                <td>{{ item.jfrq.isoformat }}</td>
+                <td>-</td>
+            </tr>
+        {% endfor %}
+
+        {% for item2 in grzh_xin_sxjg %}
+            {% for item2_values in item2 %}
+                {% for item2_name in name_xin %}
+                <tr>
+                    <td>{{ item2_name }}</td>
+                    <td>{{ item_xzbxhm }}</td>
+                    <td>{{ item2_values.sfhm_xin }}</td>
+                    <td>{{ item2_values.jznd }}</td>
+                    <td>{{ item2_values.dnjfy }}</td>
+                    <td>{{ item2_values.jfrq.isoformat }}</td>
+                    <td>-</td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+
+        {% for item3 in grzh_zl_sxjg %}
+            {% for item3_values in item3 %}
+                {% for item3_name in name_zl %}
+                <tr>
+                    <td>{{ item3_name }}</td>
+                    <td>-</td>
+                    <td>{{ item3_values.sfhm_grzl }}</td>
+                    <td>{{ item3_values.jznd_grzl }}</td>
+                    <td>{{ item3_values.jfyf_grzl }}</td>
+                    <td>{{ item3_values.jfrq_grzl.isoformat }}</td>
+                    <td>{{ item3_values.rksj_grzl }}</td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

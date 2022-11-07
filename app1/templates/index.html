@@ -1,0 +1,47 @@
+{% load static %} <!-- 引入静态文件目录 -->
+
+<html>
+
+<head>
+    <style>
+        h1 {
+            border: 2px solid #a1a1a1;
+            padding: 10px 40px;
+            background: #dddddd;
+            width: 800px;
+            border-radius: 15px;
+        }
+
+        div.ex1{
+            border: 2px solid #a1a1a1;
+            padding: 10px 40px;
+            background: #dddddd;
+            width: 800px;
+            border-radius: 10px;
+        }
+
+        div.ex2{
+            border: 2px solid #a1a1a1;
+            padding: 10px 40px;
+            background: #dddddd;
+            width: 300px;
+            border-radius: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>这是一个标题</h1>
+    <div class="ex1">
+        <button type="submit">上传外部文件</button>
+        <input type="file">
+        <button type="submit">上传发放数据</button>
+        <input type="file">
+    </div>
+    <div class="ex1">
+        <div class="ex2">这是反回结果的地方</div>
+    </div>
+</body>
+
+</html>
